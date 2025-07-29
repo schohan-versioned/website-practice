@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Job Application Form</title>
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+
+    <script>
+        function handleFocus(element){}
+        function handleBlur(element){}
+        function handleClick(){
+            alert("Your application was submitted!");
+        }
+        function handleChange(selectBox){
+            alert("You selected:", selectBox.value);
+        }
+    </script>
+</head>
+<body>
+    
+    <h1>Apply for a Job</h1>
+    
+    <form>
+                
+        <label for="fullName">Full Name:</label>
+        
+        <input type="text"
+        id="fullName"
+        name="fullName"
+        onfocus="handleFocus(this)"
+        onblur="handleBlur(this)"
+        >
+
+        <br>
+
+        <label for="email">Email:</label>
+        <input
+        type="text"
+        id="email"
+        name="email"
+        onfocus="handleFocus(this)"
+        onblur="handleBlur(this)"
+        >
+        <br>
+
+        <label for="position">Position Applying For:</label>
+
+        <select 
+        name="position" 
+        id="position"
+        onchange="handleChange(this)"
+        onfocus="handleFocus(this)"
+        onblur="handleBlur(this)"
+        >
+            <!--     option item in the select box       -->
+        <option value="">Select a position</option>
+        <option value="frontend">Frontend Developer</option>
+        <option value="backend">Backend Developer</option>
+        <option value="designer">UI/UX Designer</option>
+    </select>
+        <br>
+            <!--    textbox with multi line input field    -->
+        <label for="about">Why should we hire you?</label>
+        <br>
+        <textarea 
+        name="about" 
+        id="about"
+        rows="5"
+        cols="40"
+        onfocus="handleFocus(this)"
+        onblur="handleBlur(this)"
+        >
+    </textarea>
+    <br>
+
+        <!--    checkbox optional answer    -->
+        <label>
+            <input type="checkbox" name="relocate" value="yes">
+            Willing to Relocate?
+        </label>
+        <br>
+
+        <!--    single choice selection     -->
+        <p>Are you legally allowed to work in this country?</p>
+
+            <label>
+            <input type="radio" name="legalWork" value="yes">
+            Yes
+            </label>
+
+            <label>
+            <input type="radio" name="legalWork" value="no">
+            No
+            </label>
+
+        <br>
+
+        <!--    submit button   -->
+            <input 
+            type="submit"
+            value="Submit Application"
+            onclick="handleClick()"
+            >
+    </form>
+</body>
+</html>
+
+
