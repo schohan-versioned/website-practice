@@ -1,6 +1,14 @@
+// src/components/AddUser.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUsers, createUser } from '../utils/api';
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography
+} from '@mui/material';
 
 export default function AddUser() {
   const [fn, setFn] = useState('');
@@ -21,51 +29,66 @@ export default function AddUser() {
   };
 
   return (
-    <div className="centered-section">
-      <h2>Add New User</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={fn}
-          onChange={e => setFn(e.target.value)}
-          required
-        />
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Paper elevation={4} sx={{ p: 4 }}>
+        <Typography variant="h5" mb={3} align="center">
+          Add New User
+        </Typography>
 
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={ln}
-          onChange={e => setLn(e.target.value)}
-          required
-        />
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            label="First Name"
+            value={fn}
+            onChange={(e) => setFn(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
+          <TextField
+            label="Last Name"
+            value={ln}
+            onChange={(e) => setLn(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
 
-        <input
-          type="number"
-          placeholder="Age"
-          value={age}
-          onChange={e => setAge(e.target.value)}
-          required
-        />
+          <TextField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
 
-        <input
-          type="number"
-          placeholder="Salary"
-          value={salary}
-          onChange={e => setSalary(e.target.value)}
-          required
-        />
+          <TextField
+            label="Age"
+            type="number"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
 
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+          <TextField
+            label="Salary"
+            type="number"
+            value={salary}
+            onChange={(e) => setSalary(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
+
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            Submit
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
