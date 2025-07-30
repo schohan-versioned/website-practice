@@ -1,12 +1,16 @@
+// src/components/InputField.jsx
+import { TextField } from '@mui/material';
+
 export default function InputField({ type, placeholder, value, onChange }) {
   return (
-    <input
+    <TextField
       type={type}
-      placeholder={placeholder}
+      label={placeholder}
       value={value}
       onChange={onChange}
-      className="block mb-2 border p-2 rounded w-full"
+      fullWidth
       required
+      margin="normal"
     />
   );
 }

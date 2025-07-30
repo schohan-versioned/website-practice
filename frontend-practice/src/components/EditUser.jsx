@@ -1,6 +1,14 @@
+// src/components/EditUser.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchUsers, createUser } from '../utils/api';
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography
+} from '@mui/material';
 
 export default function EditUser() {
   const { id } = useParams();
@@ -29,22 +37,37 @@ export default function EditUser() {
   };
 
   return (
-    <div className="centered-section">
-      <h2>Update Salary</h2>
-      <p><strong>Name:</strong> {user.fn} {user.ln}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Age:</strong> {user.age}</p>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Paper elevation={4} sx={{ p: 4 }}>
+        <Typography variant="h5" mb={2} align="center">
+          Update Salary
+        </Typography>
 
-      <form onSubmit={handleUpdate}>
-        <input
-          type="number"
-          placeholder="New Salary"
-          value={salary}
-          onChange={e => setSalary(e.target.value)}
-          required
-        />
-        <button type="submit">Update</button>
-      </form>
-    </div>
+        <Typography variant="body1" mb={1}>
+          <strong>Name:</strong> {user.fn} {user.ln}
+        </Typography>
+        <Typography variant="body1" mb={1}>
+          <strong>Email:</strong> {user.email}
+        </Typography>
+        <Typography variant="body1" mb={2}>
+          <strong>Age:</strong> {user.age}
+        </Typography>
+
+        <Box component="form" onSubmit={handleUpdate}>
+          <TextField
+            label="New Salary"
+            type="number"
+            value={salary}
+            onChange={(e) => setSalary(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
+          />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            Update
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
