@@ -17,3 +17,6 @@ app.use('/', userRoutes); // use new route file
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });
+
+
+// THIS IS A MEANINGLESS LINE ONLY WRITTEN TO PRACTICE A PULL REQUEST
