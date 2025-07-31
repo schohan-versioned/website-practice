@@ -21,6 +21,11 @@ const UserModel = {
   updateSalary: (id, salary, callback) => {
     const sql = 'UPDATE users SET salary = ? WHERE id = ?';
     db.query(sql, [salary, id], callback);
+  },
+
+  deleteById: (id, callback) => {
+    const sql = 'DELETE FROM users WHERE id = ?';
+    db.query(sql, [id], callback);
   }
 };
 
