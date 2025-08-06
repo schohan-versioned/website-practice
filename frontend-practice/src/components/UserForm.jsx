@@ -4,7 +4,8 @@ import {
   Button,
   Paper,
   TextField,
-  Typography
+  Typography,
+  Autocomplete
 } from '@mui/material';
 
 export default function UserForm({
@@ -13,7 +14,10 @@ export default function UserForm({
   onChange,
   onSubmit,
   buttonLabel = "Submit",
-  showFields = {}
+  showFields = {},
+  departments = null,               // array of { id, name }
+  selectedDeptIds = [],
+  setSelectedDeptIds = () => {}
 }) {
   return (
     <Paper elevation={4} sx={{ p: 4 }}>
@@ -82,6 +86,22 @@ export default function UserForm({
             fullWidth
             required
             margin="normal"
+          />
+        )}
+
+        {/* Department Multiselect */}
+        {departments && (
+          <Autocomplete
+            multiple
+            options={departments}
+            getOptionLabel={(option) => option.name}
+            value={departments.filter((d) => selectedDeptIds.includes(d.id))}
+            onChange={(_, value) => setSelectedDeptIds(value.map((d) => d.id))}
+            renderInput={(params) => (
+              <TextField {...params} label="Assign Departments" margin="normal" />
+            )}
+            fullWidth
+            sx={{ mt: 1 }}
           />
         )}
 

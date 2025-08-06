@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import AddUser from './components/AddUser';
 import EditUser from './components/EditUser';
+import Departments from './components/Departments'; // ✅ new page
 import Navbar from './components/Navbar';
 import oceanBackground from './assets/ocean.png';
 
@@ -63,6 +64,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddUser />} />
             <Route path="/edit/:id" element={<EditUser />} />
+            <Route path="/departments" element={<Departments />} /> {/* ✅ new route */}
           </Routes>
         </Router>
       </Box>

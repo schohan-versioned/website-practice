@@ -1,64 +1,109 @@
-const departmentModel = require('../models/departmentModel');
+// controllers/departmentController.js
+const { promiseDb } = require('../db/db');
 
-// GET /departments
-const getAllDepartments = async (req, res) => {
-    console.log('🔥 Controller: GET /departments hit'); // DEBUG LOG
+// 🟢 Get all departments with user count
+exports.getAllDepartments = async (req, res, next) => {
   try {
-    const [rows] = await departmentModel.getAllDepartments();
+    const [rows] = await promiseDb.query(
+      `SELECT d.id, d.name, COUNT(ud.user_id) AS user_count
+       FROM departments d
+       LEFT JOIN user_departments ud ON d.id = ud.department_id
+       GROUP BY d.id`
+    );
     res.json(rows);
   } catch (err) {
-    console.error('Error fetching departments:', err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 };
 
-// POST /departments
-const createDepartment = async (req, res) => {
-  const { name } = req.body;
-
-  console.log('📥 POST /departments called with body:', req.body);
-
-  if (!name) {
-    return res.status(400).json({ error: 'Department name is required' });
-  }
-
+// 🔍 Get department by ID
+exports.getDepartmentById = async (req, res, next) => {
   try {
-    await departmentModel.createDepartment(name);
-    res.status(201).json({ message: 'Department created' });
+    const { id } = req.params;
+    const [rows] = await promiseDb.query(
+      `SELECT * FROM departments WHERE id = ?`,
+      [id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Department not found' });
+    res.json(rows[0]);
   } catch (err) {
-    console.error('❌ Error creating department:', err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 };
 
-// PUT /departments/:id
-const updateDepartment = async (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
+// ➕ Create a department
+exports.createDepartment = async (req, res, next) => {
   try {
-    await departmentModel.updateDepartment(id, name);
-    res.json({ message: 'Department updated' });
+    const { name } = req.body;
+    const [result] = await promiseDb.query(
+      `INSERT INTO departments (name) VALUES (?)`,
+      [name]
+    );
+    res.status(201).json({ id: result.insertId, name });
   } catch (err) {
-    console.error('Error updating department:', err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 };
 
-// DELETE /departments/:id
-const deleteDepartment = async (req, res) => {
-  const { id } = req.params;
+// 📝 Update department name
+exports.updateDepartment = async (req, res, next) => {
   try {
-    await departmentModel.deleteDepartment(id);
-    res.json({ message: 'Department deleted' });
+    const { id } = req.params;
+    const { name } = req.body;
+    await promiseDb.query(`UPDATE departments SET name = ? WHERE id = ?`, [name, id]);
+    res.status(200).json({ message: 'Department updated' });
   } catch (err) {
-    console.error('Error deleting department:', err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 };
 
-module.exports = {
-  getAllDepartments,
-  createDepartment,
-  updateDepartment,
-  deleteDepartment,
+// ❌ Delete department
+exports.deleteDepartment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await promiseDb.query(`DELETE FROM departments WHERE id = ?`, [id]);
+    res.status(200).json({ message: 'Department deleted' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// 👥 Get users in a department
+exports.getUsersInDepartment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await promiseDb.query(
+      `SELECT u.id, u.fn, u.ln, u.email, u.age, u.salary, u.created_at
+       FROM users u
+       JOIN user_departments ud ON u.id = ud.user_id
+       WHERE ud.department_id = ?`,
+      [id]
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// 🔗 Assign users to department (bulk)
+exports.assignUsersToDepartment = async (req, res, next) => {
+  try {
+    const { id: departmentId } = req.params;
+    const { userIds } = req.body; // expects: { userIds: [1, 2, 3] }
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({ error: 'Invalid userIds array' });
+    }
+
+    const values = userIds.map(userId => [userId, departmentId]);
+
+    await promiseDb.query(
+      `INSERT IGNORE INTO user_departments (user_id, department_id) VALUES ?`,
+      [values]
+    );
+
+    res.status(200).json({ message: 'Users assigned to department' });
+  } catch (err) {
+    next(err);
+  }
 };

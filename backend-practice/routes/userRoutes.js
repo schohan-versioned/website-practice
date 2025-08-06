@@ -1,14 +1,19 @@
 // routes/userRoutes.js
-// Defines API endpoints related to users and maps them to the appropriate controller functions.
+// Defines API endpoints related to users
 
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers'); // now pulling from index.js
+const userController = require('../controllers');
 
-router.get('/users', userController.getAllUsers);
-router.get('/user/:id', userController.getUserById);
-router.post('/createuser', userController.createUser);
-router.put('/updateuser/:id', userController.updateUserSalary);
-router.delete('/user/:id', userController.deleteUserById);
+// 🧾 Basic CRUD
+router.get('/users', userController.getAllUsers);                     // All users (with departments)
+router.get('/users/:id', userController.getUserById);                 // Single user
+router.post('/users', userController.createUser);                     // Create user
+router.put('/users/:id', userController.updateUser);                  // Update user (salary, name, dept)
+router.delete('/users/:id', userController.deleteUser);               // Delete user
+
+// 🔍 Extras for frontend
+router.get('/users/search/:query', userController.searchUsers);       // Search by name/email
+router.get('/users/filter/department/:deptId', userController.getUsersByDepartment); // Filter by department
 
 module.exports = router;
