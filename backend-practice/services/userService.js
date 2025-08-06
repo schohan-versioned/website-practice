@@ -1,60 +1,43 @@
 // services/userService.js
-// Contains business logic for user-related operations.
-// Interacts with the userModel/database and performs data validation or transformation.
+// Business logic for user-related operations using promise-based MySQL interface
 
-const db = require('../db/db');
+const { promiseDb } = require('../db/db');
 const { validateUserData } = require('../helpers/validateUserData');
 
 // Get all users
-function getAllUsers() {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM users', (err, results) => {
-      if (err) return reject(err);
-      resolve(results);
-    });
-  });
+async function getAllUsers() {
+  console.log('📥 Executing query for getAllUsers...');
+  const [rows] = await promiseDb.query('SELECT * FROM users');
+  return rows;
 }
 
 // Get user by ID
-function getUserById(id) {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM users WHERE id = ?', [id], (err, result) => {
-      if (err) return reject(err);
-      resolve(result[0] || {});
-    });
-  });
+async function getUserById(id) {
+  const [rows] = await promiseDb.query('SELECT * FROM users WHERE id = ?', [id]);
+  return rows[0] || {};
 }
 
 // Create a new user
-function createUser(user) {
-  return new Promise((resolve, reject) => {
-    if (!validateUserData(user)) {
-      return reject(new Error('Invalid user data'));
-    }
+async function createUser(user) {
+  if (!validateUserData(user)) {
+    throw new Error('Invalid user data');
+  }
 
-    const { fn, ln, email, age, salary } = user;
-    const sql = 'INSERT INTO users (fn, ln, email, age, salary) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [fn, ln, email, age, salary], (err, result) => {
-      if (err) return reject(err);
-      resolve({ id: result.insertId });
-    });
-  });
+  const { fn, ln, email, age, salary } = user;
+  const sql = 'INSERT INTO users (fn, ln, email, age, salary) VALUES (?, ?, ?, ?, ?)';
+  const [result] = await promiseDb.query(sql, [fn, ln, email, age, salary]);
+  return { id: result.insertId };
 }
 
 // Update user salary
-function updateUserSalary(id, salary) {
-  return new Promise((resolve, reject) => {
-    const sql = 'UPDATE users SET salary = ? WHERE id = ?';
-    db.query(sql, [salary, id], (err) => {
-      if (err) return reject(err);
-      resolve();
-    });
-  });
+async function updateUserSalary(id, salary) {
+  const sql = 'UPDATE users SET salary = ? WHERE id = ?';
+  await promiseDb.query(sql, [salary, id]);
 }
 
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
-  updateUserSalary,
+  updateUserSalary
 };

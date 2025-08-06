@@ -1,20 +1,17 @@
 // routes/departmentRoutes.js
-// Handles all /departments routes and maps them to controller functions.
-
 const express = require('express');
 const router = express.Router();
 const departmentController = require('../controllers/departmentController');
 
-// GET all departments
+// 📦 CRUD Operations
 router.get('/departments', departmentController.getAllDepartments);
-
-// POST a new department
+router.get('/departments/:id', departmentController.getDepartmentById);
 router.post('/departments', departmentController.createDepartment);
-
-// PUT (update) a department by ID
 router.put('/departments/:id', departmentController.updateDepartment);
-
-// DELETE a department by ID
 router.delete('/departments/:id', departmentController.deleteDepartment);
+
+// 👥 Users in Department
+router.get('/departments/:id/users', departmentController.getUsersInDepartment);
+router.post('/departments/:id/users', departmentController.assignUsersToDepartment);
 
 module.exports = router;
